@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metrics-dashboard-prod
+  namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-sync-succeeded.email: lsaid@softnet.co.tz
+    notifications.argoproj.io/subscribe.on-sync-failed.email: lsaid@softnet.co.tz
+    notifications.argoproj.io/subscribe.on-health-status-change.email: lsaid@softnet.co.tz
+    notifications.argoproj.io/subscribe.on-pod-crash-loop.email: lsaid@softnet.co.tz
+spec:
+  project: default
+  source:
+    repoURL: http://192.168.15.85/kubernetes-manifest/metrics-dashboard.git
+    targetRevision: prod          # prod branch = production releases (image tag = version e.g. 1.2.0)
+    path: k8s
+  destination:
+    # ── SAME CLUSTER ────────────────────────────────────────────────────────────
+    # While using a single cluster, keep this as-is and isolate via namespace.
+    # server: https://kubernetes.default.svc
+    # namespace: metrics-dashboard
+    #
+    # ── SEPARATE PROD CLUSTER ───────────────────────────────────────────────────
+    # Replace with your prod cluster API server and register it in ArgoCD first:
+    #   argocd cluster add <prod-context-name>
+    server: https://CHANGE_ME_PROD_CLUSTER_API_IP:6443
+    namespace: metrics-dashboard
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
