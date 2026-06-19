@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: metrics-dashboard-route
+  namespace: metrics-dashboard
+  labels:
+    app: dashboard
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: istio-system
+  hostnames:
+  - "metrics-dashboard.dev.softnethq.co.tz"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: dashboard
+      port: 80
