@@ -9,7 +9,7 @@ spec:
   - name: main-gateway
     namespace: istio-system
   hostnames:
-  - "metrics-dashboard.dev.softnethq.co.tz"
+  - "metrics-dashboard.prod.softnethq.co.tz"
   rules:
   - matches:
     - path:
