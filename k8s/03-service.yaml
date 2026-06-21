@@ -13,7 +13,7 @@ spec:
       port: 80
       targetPort: http
     - name: tv
-      port: 32029
+      port: 32030
       targetPort: http
-      nodePort: 32029
+      nodePort: 32030
       protocol: TCP
