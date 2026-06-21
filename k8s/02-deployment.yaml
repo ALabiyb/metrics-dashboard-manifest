@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: metrics-dashboard
-  namespace: metrics-dashboard
   labels:
     app: dashboard
 spec:
