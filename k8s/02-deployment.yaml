@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: metrics-dashboard
-  namespace: metrics-dashboard
   labels:
     app: dashboard
 spec:
@@ -90,6 +89,9 @@ spec:
                   name: metrics-dashboard-config
                   key: OIDC_TLS_SKIP_VERIFY
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
