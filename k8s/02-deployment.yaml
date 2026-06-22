@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: dashboard
-          image: harbor.devops.softnethq.co.tz/k8s_dashboard/metrics-dashboard:1.0.0
+          image: harbor.devops.softnethq.co.tz/CHANGE_ME_harbor_project/metrics-dashboard:CHANGE_ME_tag
           imagePullPolicy: Always
           ports:
             - name: http
@@ -53,6 +53,12 @@ spec:
                 configMapKeyRef:
                   name: metrics-dashboard-config
                   key: CLUSTER_NAME
+            # Shown in the login page eyebrow badge: "Development" or "Production".
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: APP_ENV
             - name: PROMETHEUS_URL
               valueFrom:
                 configMapKeyRef:
