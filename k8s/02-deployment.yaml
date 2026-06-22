@@ -53,6 +53,12 @@ spec:
                 configMapKeyRef:
                   name: metrics-dashboard-config
                   key: CLUSTER_NAME
+            # Shown in the login page eyebrow badge: "Development" or "Production".
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: APP_ENV
             - name: PROMETHEUS_URL
               valueFrom:
                 configMapKeyRef:

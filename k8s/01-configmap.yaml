@@ -9,6 +9,9 @@ data:
   # Shown in the dashboard header — change to "prod-cluster" in the prod branch.
   CLUSTER_NAME: "dev-cluster"
 
+  # Shown in the login page eyebrow badge — change to "Production" in the prod branch.
+  APP_ENV: "Development"
+
   # --- Keycloak SSO (same realm as k8s-dashboard) --------------------------
   OIDC_ISSUER_URL: "https://keycloak.devops.softnethq.co.tz/realms/k8s%20dashboard"
   OIDC_CLIENT_ID: "metrics-dashboard"
