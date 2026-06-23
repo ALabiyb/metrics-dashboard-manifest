@@ -23,7 +23,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: dashboard
-          image: harbor.devops.softnethq.co.tz/k8s_dashboard/metrics-dashboard:10
+          image: harbor.devops.softnethq.co.tz/k8s_dashboard/metrics-dashboard:5
           imagePullPolicy: Always
           ports:
             - name: http
