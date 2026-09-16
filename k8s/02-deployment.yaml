@@ -49,11 +49,11 @@ spec:
                 secretKeyRef:
                   name: dashboard-auth
                   key: EMBED_TOKEN
-            - name: CLUSTER_NAME
+            - name: APP_CLUSTER_NAME
               valueFrom:
                 configMapKeyRef:
                   name: metrics-dashboard-config
-                  key: CLUSTER_NAME
+                  key: APP_CLUSTER_NAME
             # Shown in the login page eyebrow badge: "Development" or "Production".
             - name: APP_ENV
               valueFrom:
@@ -85,11 +85,16 @@ spec:
                 configMapKeyRef:
                   name: metrics-dashboard-config
                   key: OIDC_REDIRECT_URL
-            - name: OIDC_ADMIN_ROLE
+            - name: OIDC_ADMIN_GROUP
               valueFrom:
                 configMapKeyRef:
                   name: metrics-dashboard-config
-                  key: OIDC_ADMIN_ROLE
+                  key: OIDC_ADMIN_GROUP
+            - name: ALERTMANAGER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: ALERTMANAGER_URL
             - name: OIDC_TLS_SKIP_VERIFY
               valueFrom:
                 configMapKeyRef:
