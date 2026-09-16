@@ -8,17 +8,18 @@ data:
   PROMETHEUS_URL: "http://monitoring-kube-prometheus-prometheus.monitoring.svc:9090"
 
   # Shown in the dashboard header — change to "prod-cluster" in the prod branch.
-  CLUSTER_NAME: "dev-cluster"
+  APP_CLUSTER_NAME: "dev-cluster"
 
   # Shown in the login page eyebrow badge — change to "Production" in the prod branch.
   APP_ENV: "Development"
 
+  # Alertmanager polling — polls /api/v2/alerts every 30s.
+  ALERTMANAGER_URL: "http://monitoring-kube-prometheus-alertmanager.monitoring.svc:9093"
+
   # --- Keycloak SSO (unified SoftNet AD realm — same as k8s-dashboard) -----
-  # Client `metrics-dashboard` is registered in the SoftNet AD realm.
-  # OIDC_ADMIN_ROLE below matches a realm role in that realm; assign it to
-  # every user who should be a metrics-dashboard admin.
+  # OIDC_ADMIN_GROUP must match a Keycloak group name; members get admin role.
   OIDC_ISSUER_URL: "https://keycloak.devops.softnethq.co.tz/realms/SoftNet%20AD"
   OIDC_CLIENT_ID: "metrics-dashboard"
   OIDC_REDIRECT_URL: "https://metrics-dashboard.dev.softnethq.co.tz/login/oidc/callback"
-  OIDC_ADMIN_ROLE: "dashboard-admin"
+  OIDC_ADMIN_GROUP: "k8s-cluster-admins"
   OIDC_TLS_SKIP_VERIFY: "true"
