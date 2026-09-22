@@ -8,7 +8,7 @@ data:
   PROMETHEUS_URL: "http://monitoring-kube-prometheus-prometheus.monitoring.svc:9090"
 
   # ---- Branding / identity ---------------------------------------------------
-  APP_COMPANY_NAME: "SoftNet HQ"
+  APP_COMPANY_NAME: "NexBridge HQ"
   APP_CLUSTER_NAME: "dev-cluster"
   APP_ENV: "Development"
 
@@ -21,15 +21,15 @@ data:
   SMTP_PORT: "587"
   SMTP_FROM_NAME: "SoftNet Metrics"
   SMTP_FROM: ""
-  DASHBOARD_URL: "https://metrics-dashboard.dev.softnethq.co.tz"
+  DASHBOARD_URL: "https://metrics-dashboard.dev.nexbridge.co.tz"
 
   # ---- Cross-links -----------------------------------------------------------
-  K8S_DASHBOARD_URL: "https://k8s-dashboard.dev.softnethq.co.tz"
-  ARGOCD_URL: "https://argocd.devops.softnethq.co.tz"
+  K8S_DASHBOARD_URL: "https://k8s-dashboard.dev.nexbridge.co.tz"
+  ARGOCD_URL: "https://argocd.devops.nexbridge.co.tz"
 
   # ---- Keycloak SSO ----------------------------------------------------------
-  OIDC_ISSUER_URL: "https://keycloak.devops.softnethq.co.tz/realms/SoftNet%20AD"
+  OIDC_ISSUER_URL: "https://keycloak.devops.nexbridge.co.tz/realms/NexBridge%20AD"
   OIDC_CLIENT_ID: "metrics-dashboard"
-  OIDC_REDIRECT_URL: "https://metrics-dashboard.dev.softnethq.co.tz/login/oidc/callback"
+  OIDC_REDIRECT_URL: "https://metrics-dashboard.dev.nexbridge.co.tz/login/oidc/callback"
   OIDC_ADMIN_GROUP: "k8s-cluster-admins"
   OIDC_TLS_SKIP_VERIFY: "true"
