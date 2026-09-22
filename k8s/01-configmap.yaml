@@ -8,14 +8,30 @@ data:
   # Prod cluster uses prometheus-stack helm release naming
   PROMETHEUS_URL: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc:9090"
 
-  CLUSTER_NAME: "prod-cluster"
-
-  # Shown in the login page eyebrow badge
+  # ---- Branding / identity ---------------------------------------------------
+  APP_COMPANY_NAME: "SoftNet HQ"
+  APP_CLUSTER_NAME: "prod-cluster"
   APP_ENV: "Production"
 
-  # --- Keycloak SSO (same realm as dev — shared Keycloak instance) ---------
-  OIDC_ISSUER_URL: "https://keycloak.devops.softnethq.co.tz/realms/k8s%20dashboard"
+  # ---- Alertmanager ----------------------------------------------------------
+  # Matches prod helm release naming (prometheus-stack-*)
+  ALERTMANAGER_URL: "http://prometheus-stack-kube-prom-alertmanager.monitoring.svc:9093"
+
+  # ---- Alerting (NOC email) --------------------------------------------------
+  ALERT_EMAIL_TO: ""
+  SMTP_HOST: "smtp.zoho.com"
+  SMTP_PORT: "587"
+  SMTP_FROM_NAME: "SoftNet Metrics"
+  SMTP_FROM: ""
+  DASHBOARD_URL: "https://metrics-dashboard.prod.softnethq.co.tz"
+
+  # ---- Cross-links -----------------------------------------------------------
+  K8S_DASHBOARD_URL: "https://k8s-dashboard.prod.softnethq.co.tz"
+  ARGOCD_URL: "https://argocd.devops.softnethq.co.tz"
+
+  # ---- Keycloak SSO ----------------------------------------------------------
+  OIDC_ISSUER_URL: "https://keycloak.devops.softnethq.co.tz/realms/SoftNet%20AD"
   OIDC_CLIENT_ID: "metrics-dashboard"
   OIDC_REDIRECT_URL: "https://metrics-dashboard.prod.softnethq.co.tz/login/oidc/callback"
-  OIDC_ADMIN_ROLE: "dashboard-admin"
+  OIDC_ADMIN_GROUP: "k8s-cluster-admins"
   OIDC_TLS_SKIP_VERIFY: "true"

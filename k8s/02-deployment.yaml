@@ -17,8 +17,8 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 65532
-        runAsGroup: 65532
+        runAsUser: 1001
+        runAsGroup: 1001
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -29,11 +29,14 @@ spec:
             - name: http
               containerPort: 8090
           env:
+            # ---- Core -------------------------------------------------------
             - name: PORT
               valueFrom:
                 configMapKeyRef:
                   name: metrics-dashboard-config
                   key: PORT
+
+            # ---- Auth (Secret) ----------------------------------------------
             - name: DASHBOARD_USERS
               valueFrom:
                 secretKeyRef:
@@ -49,22 +52,95 @@ spec:
                 secretKeyRef:
                   name: dashboard-auth
                   key: EMBED_TOKEN
-            - name: CLUSTER_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: metrics-dashboard-config
-                  key: CLUSTER_NAME
-            # Shown in the login page eyebrow badge: "Development" or "Production".
-            - name: APP_ENV
-              valueFrom:
-                configMapKeyRef:
-                  name: metrics-dashboard-config
-                  key: APP_ENV
+
+            # ---- Data source ------------------------------------------------
             - name: PROMETHEUS_URL
               valueFrom:
                 configMapKeyRef:
                   name: metrics-dashboard-config
                   key: PROMETHEUS_URL
+
+            # ---- Branding / identity ----------------------------------------
+            - name: APP_COMPANY_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: APP_COMPANY_NAME
+            - name: APP_CLUSTER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: APP_CLUSTER_NAME
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: APP_ENV
+
+            # ---- Alertmanager -----------------------------------------------
+            - name: ALERTMANAGER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: ALERTMANAGER_URL
+
+            # ---- Alerting (NOC email) ----------------------------------------
+            - name: ALERT_EMAIL_TO
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: ALERT_EMAIL_TO
+            - name: SMTP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: SMTP_HOST
+            - name: SMTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: SMTP_PORT
+            - name: SMTP_FROM_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: SMTP_FROM_NAME
+            - name: SMTP_FROM
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: SMTP_FROM
+            - name: DASHBOARD_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: DASHBOARD_URL
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: dashboard-auth
+                  key: SMTP_USERNAME
+                  optional: true
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dashboard-auth
+                  key: SMTP_PASSWORD
+                  optional: true
+
+            # ---- Cross-links ------------------------------------------------
+            - name: K8S_DASHBOARD_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: K8S_DASHBOARD_URL
+            - name: ARGOCD_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: ARGOCD_URL
+
+            # ---- Keycloak SSO -----------------------------------------------
             - name: OIDC_ISSUER_URL
               valueFrom:
                 configMapKeyRef:
@@ -85,20 +161,18 @@ spec:
                 configMapKeyRef:
                   name: metrics-dashboard-config
                   key: OIDC_REDIRECT_URL
-            - name: OIDC_ADMIN_ROLE
+            - name: OIDC_ADMIN_GROUP
               valueFrom:
                 configMapKeyRef:
                   name: metrics-dashboard-config
-                  key: OIDC_ADMIN_ROLE
+                  key: OIDC_ADMIN_GROUP
             - name: OIDC_TLS_SKIP_VERIFY
               valueFrom:
                 configMapKeyRef:
                   name: metrics-dashboard-config
                   key: OIDC_TLS_SKIP_VERIFY
+
           securityContext:
-            runAsNonRoot: true
-            runAsUser: 65532
-            runAsGroup: 65532
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
