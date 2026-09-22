@@ -17,8 +17,8 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 65532
-        runAsGroup: 65532
+        runAsUser: 1001
+        runAsGroup: 1001
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -95,15 +95,69 @@ spec:
                 configMapKeyRef:
                   name: metrics-dashboard-config
                   key: ALERTMANAGER_URL
+            - name: APP_COMPANY_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: APP_COMPANY_NAME
+            - name: ALERT_EMAIL_TO
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: ALERT_EMAIL_TO
+            - name: SMTP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: SMTP_HOST
+            - name: SMTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: SMTP_PORT
+            - name: SMTP_FROM_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: SMTP_FROM_NAME
+            - name: SMTP_FROM
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: SMTP_FROM
+            - name: DASHBOARD_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: DASHBOARD_URL
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: dashboard-auth
+                  key: SMTP_USERNAME
+                  optional: true
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dashboard-auth
+                  key: SMTP_PASSWORD
+                  optional: true
+            - name: K8S_DASHBOARD_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: K8S_DASHBOARD_URL
+            - name: ARGOCD_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: ARGOCD_URL
             - name: OIDC_TLS_SKIP_VERIFY
               valueFrom:
                 configMapKeyRef:
                   name: metrics-dashboard-config
                   key: OIDC_TLS_SKIP_VERIFY
           securityContext:
-            runAsNonRoot: true
-            runAsUser: 65532
-            runAsGroup: 65532
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
