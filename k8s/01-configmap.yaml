@@ -8,9 +8,9 @@ data:
   PROMETHEUS_URL: "http://monitoring-kube-prometheus-prometheus.monitoring.svc:9090"
 
   # ---- Branding / identity ---------------------------------------------------
-  APP_COMPANY_NAME: "SoftNet HQ"
+  APP_COMPANY_NAME: "InfraWatch"
   APP_CLUSTER_NAME: "uat-cluster"
-  APP_ENV: "UAT"
+  APP_ENV: "production"
 
   # ---- Alertmanager ----------------------------------------------------------
   ALERTMANAGER_URL: "http://monitoring-kube-prometheus-alertmanager.monitoring.svc:9093"
