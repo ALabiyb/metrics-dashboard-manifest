@@ -173,6 +173,7 @@ spec:
                   key: OIDC_TLS_SKIP_VERIFY
 
           securityContext:
+            runAsNonRoot: true
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
