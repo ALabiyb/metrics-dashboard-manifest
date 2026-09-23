@@ -9,9 +9,9 @@ data:
   PROMETHEUS_URL: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc:9090"
 
   # ---- Branding / identity ---------------------------------------------------
-  APP_COMPANY_NAME: "SoftNet HQ"
+  APP_COMPANY_NAME: "InfraWatch"
   APP_CLUSTER_NAME: "prod-cluster"
-  APP_ENV: "Production"
+  APP_ENV: "production"
 
   # ---- Alertmanager ----------------------------------------------------------
   # Matches prod helm release naming (prometheus-stack-*)
