@@ -29,8 +29,8 @@ data:
 
   # Per-node-group routing: alerts about a cluster node, a vfd-* external
   # server, or gitlab/devops go to a different responsible person instead
-  # of one shared inbox. Each is optional - leave blank to fall back to
-  # ALERT_EMAIL_TO for that group.
+  # of one shared inbox. Each is optional - leave blank to skip that group
+  # (ALERT_EMAIL_TO above still applies to everything either way).
   ALERT_EMAIL_CLUSTER_NODES: "dfaustine@softnet.co.tz"
   ALERT_EMAIL_VFD: "mmshana@softnet.co.tz"
   ALERT_EMAIL_GITLAB_DEVOPS: "lsaid@softnethq.co.tz"
