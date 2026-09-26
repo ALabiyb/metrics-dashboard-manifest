@@ -33,8 +33,8 @@ data:
   # server, or gitlab/devops go to a different responsible person instead
   # of one shared inbox. Each is optional - leave blank to fall back to
   # ALERT_EMAIL_TO for that group.
-  ALERT_EMAIL_CLUSTER_NODES: "oncall-infra@nexbridge.co.tz"
-  ALERT_EMAIL_VFD: "oncall-vfd@nexbridge.co.tz"
+  ALERT_EMAIL_CLUSTER_NODES: "oncall-infra@nexbridge.co.tz,oncall-platform@nexbridge.co.tz"
+  ALERT_EMAIL_VFD: "oncall-vfd@nexbridge.co.tz,oncall-platform@nexbridge.co.tz"
   ALERT_EMAIL_GITLAB_DEVOPS: "oncall-platform@nexbridge.co.tz"
 
   DASHBOARD_URL: "https://metrics-dashboard.dev.nexbridge.co.tz"
