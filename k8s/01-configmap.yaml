@@ -23,7 +23,7 @@ data:
   ALERT_EMAIL_TO: ""
   SMTP_HOST: "smtp.zoho.com"
   SMTP_PORT: "587"
-  SMTP_FROM_NAME: "SoftNet Metrics"
+  SMTP_FROM_NAME: "InfraWatch"
   SMTP_FROM: "donotreply@softnet.co.tz"
 
   # Per-node-group routing: alerts about a cluster node, a vfd-* external
