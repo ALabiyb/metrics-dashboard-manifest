@@ -32,8 +32,8 @@ data:
   # server, or gitlab/devops go to a different responsible person instead
   # of one shared inbox. Each is optional - leave blank to fall back to
   # ALERT_EMAIL_TO for that group.
-  ALERT_EMAIL_CLUSTER_NODES: "dfaustine@softnet.co.tz"
-  ALERT_EMAIL_VFD: "mmshana@softnet.co.tz"
+  ALERT_EMAIL_CLUSTER_NODES: "dfaustine@softnet.co.tz,lsaid@softnethq.co.tz"
+  ALERT_EMAIL_VFD: "mmshana@softnet.co.tz,lsaid@softnethq.co.tz"
   ALERT_EMAIL_GITLAB_DEVOPS: "lsaid@softnethq.co.tz"
 
   DASHBOARD_URL: "https://metrics-dashboard.prod.softnethq.co.tz"
