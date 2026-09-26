@@ -1,0 +1,10 @@
+# ---------------------------------------------------------------------------
+# Author: Labiyb M. Said — DevSecOps Engineer
+# Contact: saidlabiybm@gmail.com
+# ---------------------------------------------------------------------------
+apiVersion: v2
+name: metrics-dashboard
+description: InfraWatch — a Prometheus-backed metrics dashboard with per-node/external-server views, ArgoCD/Alertmanager integration, and NOC email alerting.
+type: application
+version: 0.1.0
+appVersion: "23"

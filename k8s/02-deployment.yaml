@@ -175,6 +175,12 @@ spec:
                 configMapKeyRef:
                   name: metrics-dashboard-config
                   key: OIDC_TLS_SKIP_VERIFY
+            - name: OIDC_SCOPED_VIEWER_GROUPS
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: OIDC_SCOPED_VIEWER_GROUPS
+                  optional: true
           securityContext:
             runAsNonRoot: true
             allowPrivilegeEscalation: false

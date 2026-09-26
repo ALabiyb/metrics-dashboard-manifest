@@ -1,0 +1,39 @@
+# ---------------------------------------------------------------------------
+# Author: Labiyb M. Said — DevSecOps Engineer
+# Contact: saidlabiybm@gmail.com
+# ---------------------------------------------------------------------------
+#
+# EXAMPLE ONLY — not applied anywhere, not read by ArgoCD. Shows what the
+# real argocd/metrics-dashboard-dev.yaml would look like after cutting dev
+# over from the raw k8s/ manifests to the helm/metrics-dashboard chart. Copy
+# this over the real file only when you're ready to make that switch — see
+# helm/metrics-dashboard/README.md.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metrics-dashboard-dev
+  namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-sync-succeeded.email: lsaid@softnet.co.tz
+    notifications.argoproj.io/subscribe.on-sync-failed.email: lsaid@softnet.co.tz
+    notifications.argoproj.io/subscribe.on-health-status-change.email: lsaid@softnet.co.tz
+    notifications.argoproj.io/subscribe.on-pod-crash-loop.email: lsaid@softnet.co.tz
+spec:
+  project: default
+  source:
+    repoURL: http://192.168.15.85/kubernetes-manifest/metrics-dashboard.git
+    targetRevision: dev           # dev branch = development builds (image tag = build number)
+    path: helm/metrics-dashboard
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-dev.yaml
+  destination:
+    server: https://kubernetes.default.svc   # dev cluster (same cluster as ArgoCD)
+    namespace: metrics-dashboard-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

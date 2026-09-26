@@ -1,0 +1,19 @@
+# ---------------------------------------------------------------------------
+# Author: Labiyb M. Said — DevSecOps Engineer
+# Contact: saidlabiybm@gmail.com
+# ---------------------------------------------------------------------------
+InfraWatch (metrics-dashboard) deployed as release {{ .Release.Name }} in namespace {{ .Release.Namespace }}.
+
+{{- if not .Values.secret.smtpUsername }}
+
+NOC email alerting is OFF (secret.smtpUsername / secret.smtpPassword are
+blank). Set both to enable it — nothing else changes automatically.
+{{- end }}
+{{- if not .Values.oidc.issuerUrl }}
+
+Keycloak SSO is OFF (oidc.issuerUrl is blank) — local DASHBOARD_USERS auth
+only.
+{{- end }}
+
+Check the Service:
+  kubectl -n {{ .Release.Namespace }} get svc {{ .Values.service.name }}
