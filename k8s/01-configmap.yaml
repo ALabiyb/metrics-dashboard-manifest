@@ -8,7 +8,7 @@ data:
   PROMETHEUS_URL: "http://monitoring-kube-prometheus-prometheus.monitoring.svc:9090"
 
   # ---- Branding / identity ---------------------------------------------------
-  APP_COMPANY_NAME: "InfraWatch"
+  APP_COMPANY_NAME: "NexBridge HQ"
   APP_CLUSTER_NAME: "dev-cluster"
   APP_ENV: "production"
 
@@ -20,29 +20,32 @@ data:
   # don't match. SMTP_USERNAME/SMTP_PASSWORD live in the dashboard-auth
   # Secret instead, generated imperatively (not tracked by GitOps here),
   # so it survives ArgoCD selfHeal.
+  #
+  # Example addresses below - this is the public/portfolio mirror, so these
+  # are placeholders, not real inboxes. See the private repo for real values.
   ALERT_EMAIL_TO: ""
   SMTP_HOST: "smtp.zoho.com"
   SMTP_PORT: "587"
-  SMTP_FROM_NAME: "SoftNet Metrics"
-  SMTP_FROM: "donotreply@softnet.co.tz"
+  SMTP_FROM_NAME: "NexBridge Metrics"
+  SMTP_FROM: "alerts@nexbridge.co.tz"
 
   # Per-node-group routing: alerts about a cluster node, a vfd-* external
   # server, or gitlab/devops go to a different responsible person instead
   # of one shared inbox. Each is optional - leave blank to fall back to
   # ALERT_EMAIL_TO for that group.
-  ALERT_EMAIL_CLUSTER_NODES: "dfaustine@softnet.co.tz"
-  ALERT_EMAIL_VFD: "mmshana@softnet.co.tz"
-  ALERT_EMAIL_GITLAB_DEVOPS: "lsaid@softnethq.co.tz"
+  ALERT_EMAIL_CLUSTER_NODES: "oncall-infra@nexbridge.co.tz"
+  ALERT_EMAIL_VFD: "oncall-vfd@nexbridge.co.tz"
+  ALERT_EMAIL_GITLAB_DEVOPS: "oncall-platform@nexbridge.co.tz"
 
-  DASHBOARD_URL: "https://metrics-dashboard.dev.softnethq.co.tz"
+  DASHBOARD_URL: "https://metrics-dashboard.dev.nexbridge.co.tz"
 
   # ---- Cross-links -----------------------------------------------------------
-  K8S_DASHBOARD_URL: "https://k8s-dashboard.dev.softnethq.co.tz"
-  ARGOCD_URL: "https://argocd.devops.softnethq.co.tz"
+  K8S_DASHBOARD_URL: "https://k8s-dashboard.dev.nexbridge.co.tz"
+  ARGOCD_URL: "https://argocd.devops.nexbridge.co.tz"
 
   # ---- Keycloak SSO ----------------------------------------------------------
-  OIDC_ISSUER_URL: "https://keycloak.devops.softnethq.co.tz/realms/SoftNet%20AD"
+  OIDC_ISSUER_URL: "https://keycloak.devops.nexbridge.co.tz/realms/NexBridge%20AD"
   OIDC_CLIENT_ID: "metrics-dashboard"
-  OIDC_REDIRECT_URL: "https://metrics-dashboard.dev.softnethq.co.tz/login/oidc/callback"
+  OIDC_REDIRECT_URL: "https://metrics-dashboard.dev.nexbridge.co.tz/login/oidc/callback"
   OIDC_ADMIN_GROUP: "k8s-cluster-admins"
   OIDC_TLS_SKIP_VERIFY: "true"
