@@ -110,6 +110,24 @@ spec:
                 configMapKeyRef:
                   name: metrics-dashboard-config
                   key: SMTP_FROM
+            - name: ALERT_EMAIL_CLUSTER_NODES
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: ALERT_EMAIL_CLUSTER_NODES
+                  optional: true
+            - name: ALERT_EMAIL_VFD
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: ALERT_EMAIL_VFD
+                  optional: true
+            - name: ALERT_EMAIL_GITLAB_DEVOPS
+              valueFrom:
+                configMapKeyRef:
+                  name: metrics-dashboard-config
+                  key: ALERT_EMAIL_GITLAB_DEVOPS
+                  optional: true
             - name: DASHBOARD_URL
               valueFrom:
                 configMapKeyRef:

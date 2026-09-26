@@ -16,11 +16,24 @@ data:
   ALERTMANAGER_URL: "http://monitoring-kube-prometheus-alertmanager.monitoring.svc:9093"
 
   # ---- Alerting (NOC email) --------------------------------------------------
+  # ALERT_EMAIL_TO is the general fallback for anything the routes below
+  # don't match. SMTP_USERNAME/SMTP_PASSWORD live in the dashboard-auth
+  # Secret instead, generated imperatively (not tracked by GitOps here),
+  # so it survives ArgoCD selfHeal.
   ALERT_EMAIL_TO: ""
   SMTP_HOST: "smtp.zoho.com"
   SMTP_PORT: "587"
   SMTP_FROM_NAME: "SoftNet Metrics"
-  SMTP_FROM: ""
+  SMTP_FROM: "donotreply@softnet.co.tz"
+
+  # Per-node-group routing: alerts about a cluster node, a vfd-* external
+  # server, or gitlab/devops go to a different responsible person instead
+  # of one shared inbox. Each is optional - leave blank to fall back to
+  # ALERT_EMAIL_TO for that group.
+  ALERT_EMAIL_CLUSTER_NODES: "dfaustine@softnet.co.tz"
+  ALERT_EMAIL_VFD: "mmshana@softnet.co.tz"
+  ALERT_EMAIL_GITLAB_DEVOPS: "lsaid@softnethq.co.tz"
+
   DASHBOARD_URL: "https://metrics-dashboard.dev.softnethq.co.tz"
 
   # ---- Cross-links -----------------------------------------------------------
