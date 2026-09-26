@@ -23,7 +23,7 @@ data:
   # SMTP_PASSWORD live in the dashboard-auth Secret instead, generated
   # imperatively (not tracked by GitOps here), so it survives ArgoCD
   # selfHeal.
-  ALERT_EMAIL_TO: "lsaid@softnethq.co.tz"
+  ALERT_EMAIL_TO: "lsaid@softnet.co.tz"
   SMTP_HOST: "smtp.zoho.com"
   SMTP_PORT: "587"
   SMTP_FROM_NAME: "InfraWatch"
@@ -35,7 +35,7 @@ data:
   # (ALERT_EMAIL_TO above still applies to everything either way).
   ALERT_EMAIL_CLUSTER_NODES: "dfaustine@softnet.co.tz"
   ALERT_EMAIL_VFD: "mmshana@softnet.co.tz"
-  ALERT_EMAIL_GITLAB_DEVOPS: "lsaid@softnethq.co.tz"
+  ALERT_EMAIL_GITLAB_DEVOPS: "lsaid@softnet.co.tz"
 
   DASHBOARD_URL: "https://metrics-dashboard.prod.softnethq.co.tz"
 
