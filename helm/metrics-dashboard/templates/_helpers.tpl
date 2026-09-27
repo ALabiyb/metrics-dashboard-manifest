@@ -41,3 +41,26 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- define "metrics-dashboard.selectorLabels" -}}
 app: {{ .Values.podLabel | default "dashboard" }}
 {{- end -}}
+
+{{/*
+Generates a stable random secret value: if the value is set explicitly in
+values, use it; otherwise reuse whatever's already in the live Secret (so
+"helm upgrade" never rotates it and silently invalidates every session /
+embed link); otherwise generate a fresh random one for a first install.
+`lookup` returns empty during `helm template`/`--dry-run` (no cluster
+context), which is fine — that path is preview-only anyway.
+Usage: {{ include "metrics-dashboard.stableSecret" (dict "root" . "value" .Values.secret.sessionSecret "key" "SESSION_SECRET" "length" 32) }}
+*/}}
+{{- define "metrics-dashboard.stableSecret" -}}
+{{- $root := .root -}}
+{{- if .value -}}
+{{- .value -}}
+{{- else -}}
+{{- $existing := lookup "v1" "Secret" $root.Release.Namespace (include "metrics-dashboard.secretName" $root) -}}
+{{- if and $existing $existing.data (index $existing.data .key) -}}
+{{- index $existing.data .key | b64dec -}}
+{{- else -}}
+{{- randAlphaNum (.length | int) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}

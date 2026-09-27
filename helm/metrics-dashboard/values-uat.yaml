@@ -15,6 +15,13 @@ image:
   # tag before using this values file for a real uat deploy.
   tag: "CHANGE_ME_tag"
 
+# The real dashboard-auth Secret is created out-of-band (imperatively, so it
+# survives ArgoCD selfHeal) - Helm must not try to create/own its own copy,
+# or it'll fight the real one with blank DASHBOARD_USERS/OIDC_CLIENT_SECRET.
+secret:
+  create: false
+  existingSecretName: "dashboard-auth"
+
 branding:
   clusterName: "uat-cluster"
 

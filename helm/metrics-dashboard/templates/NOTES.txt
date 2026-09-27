@@ -4,6 +4,22 @@
 # ---------------------------------------------------------------------------
 InfraWatch (metrics-dashboard) deployed as release {{ .Release.Name }} in namespace {{ .Release.Namespace }}.
 
+{{- if and .Values.secret.create (not .Values.secret.dashboardUsers) }}
+
+*** ACTION REQUIRED ***
+secret.dashboardUsers is blank — the pod WILL crash-loop until this is set
+(no safe default exists for real login credentials). Generate a bcrypt
+hash and set it:
+  go run . hash-password '<plaintext password>'
+Then set secret.dashboardUsers to a JSON array like:
+  [{"username":"admin","password_hash":"$2a$...","role":"admin"}]
+{{- end }}
+{{- if and .Values.oidc.issuerUrl .Values.secret.create (not .Values.secret.oidcClientSecret) }}
+
+*** ACTION REQUIRED ***
+oidc.issuerUrl is set but secret.oidcClientSecret is blank — Keycloak SSO
+will fail to start. Set it to the client secret from your Keycloak realm.
+{{- end }}
 {{- if not .Values.secret.smtpUsername }}
 
 NOC email alerting is OFF (secret.smtpUsername / secret.smtpPassword are

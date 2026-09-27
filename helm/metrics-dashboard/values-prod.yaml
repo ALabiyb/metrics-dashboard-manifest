@@ -15,6 +15,13 @@ image:
   repository: "harbor.devops.softnethq.co.tz/k8s_dashboard/metrics-dashboard"
   tag: "1.0.2"
 
+# The real dashboard-auth Secret is created out-of-band (imperatively, so it
+# survives ArgoCD selfHeal) - Helm must not try to create/own its own copy,
+# or it'll fight the real one with blank DASHBOARD_USERS/OIDC_CLIENT_SECRET.
+secret:
+  create: false
+  existingSecretName: "dashboard-auth"
+
 branding:
   clusterName: "prod-cluster"
 
