@@ -1,0 +1,54 @@
+# ---------------------------------------------------------------------------
+# Author: Labiyb M. Said — DevSecOps Engineer
+# Contact: saidlabiybm@gmail.com
+# ---------------------------------------------------------------------------
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "metrics-dashboard.configMapName" . }}
+  labels:
+    {{- include "metrics-dashboard.labels" . | nindent 4 }}
+data:
+  PORT: {{ .Values.app.port | quote }}
+  PROMETHEUS_URL: {{ .Values.dataSource.prometheusUrl | quote }}
+
+  # ---- Branding / identity ---------------------------------------------------
+  APP_COMPANY_NAME: {{ .Values.branding.companyName | quote }}
+  APP_CLUSTER_NAME: {{ .Values.branding.clusterName | quote }}
+  APP_ENV: {{ .Values.app.env | quote }}
+
+  # ---- Alertmanager ----------------------------------------------------------
+  ALERTMANAGER_URL: {{ .Values.dataSource.alertmanagerUrl | quote }}
+
+  # ---- Alerting (NOC email) --------------------------------------------------
+  # ALERT_EMAIL_TO is always CC'd on top of whichever route below matches
+  # (and is the sole recipient if nothing matches). SMTP_USERNAME/
+  # SMTP_PASSWORD live in the Secret instead (see templates/secret.yaml),
+  # never here.
+  ALERT_EMAIL_TO: {{ join "," .Values.alerting.emailTo | quote }}
+  SMTP_HOST: {{ .Values.alerting.smtp.host | quote }}
+  SMTP_PORT: {{ .Values.alerting.smtp.port | quote }}
+  SMTP_FROM_NAME: {{ .Values.alerting.smtp.fromName | quote }}
+  SMTP_FROM: {{ .Values.alerting.smtp.from | quote }}
+
+  # Per-node-group routing: alerts about a cluster node, a vfd-* external
+  # server, or gitlab/devops go to a different responsible person instead
+  # of one shared inbox. Each is optional - leave blank to skip that group
+  # (ALERT_EMAIL_TO above still applies to everything either way).
+  ALERT_EMAIL_CLUSTER_NODES: {{ join "," .Values.alerting.routes.clusterNodes | quote }}
+  ALERT_EMAIL_VFD: {{ join "," .Values.alerting.routes.vfd | quote }}
+  ALERT_EMAIL_GITLAB_DEVOPS: {{ join "," .Values.alerting.routes.gitlabDevops | quote }}
+
+  DASHBOARD_URL: {{ .Values.links.dashboardUrl | quote }}
+
+  # ---- Cross-links -----------------------------------------------------------
+  K8S_DASHBOARD_URL: {{ .Values.links.k8sDashboardUrl | quote }}
+  ARGOCD_URL: {{ .Values.links.argocdUrl | quote }}
+
+  # ---- Keycloak SSO ----------------------------------------------------------
+  OIDC_ISSUER_URL: {{ .Values.oidc.issuerUrl | quote }}
+  OIDC_CLIENT_ID: {{ .Values.oidc.clientId | quote }}
+  OIDC_REDIRECT_URL: {{ .Values.oidc.redirectUrl | quote }}
+  OIDC_ADMIN_GROUP: {{ .Values.oidc.adminGroup | quote }}
+  OIDC_TLS_SKIP_VERIFY: {{ .Values.oidc.tlsSkipVerify | quote }}
+  OIDC_SCOPED_VIEWER_GROUPS: {{ .Values.oidc.scopedViewerGroups | quote }}

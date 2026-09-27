@@ -1,0 +1,27 @@
+# ---------------------------------------------------------------------------
+# Author: Labiyb M. Said — DevSecOps Engineer
+# Contact: saidlabiybm@gmail.com
+# ---------------------------------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  labels:
+    {{- include "metrics-dashboard.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "metrics-dashboard.selectorLabels" . | nindent 4 }}
+  type: {{ .Values.service.type }}
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: http
+    {{- if .Values.service.tv.enabled }}
+    # nodePort only applies when service.type is NodePort/LoadBalancer — set
+    # service.tv.enabled: false if you switch service.type to ClusterIP.
+    - name: tv
+      port: {{ .Values.service.tv.port }}
+      targetPort: http
+      nodePort: {{ .Values.service.tv.nodePort }}
+      protocol: TCP
+    {{- end }}

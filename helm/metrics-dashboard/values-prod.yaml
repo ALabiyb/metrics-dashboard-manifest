@@ -1,0 +1,61 @@
+# ---------------------------------------------------------------------------
+# Author: Labiyb M. Said — DevSecOps Engineer
+# Contact: saidlabiybm@gmail.com
+# ---------------------------------------------------------------------------
+#
+# Layer on top of values.yaml: helm template . -f values.yaml -f values-prod.yaml
+#
+# NOTE: the live `prod` branch's argocd/metrics-dashboard-prod.yaml destination
+# is currently a placeholder for a genuinely separate prod cluster
+# (CHANGE_ME_PROD_CLUSTER_API_IP, commented out) — today it isn't registered,
+# so this values file assumes the same-cluster-isolated-by-namespace model
+# (metrics-dashboard-prod) like dev/uat, until that separate cluster exists.
+
+image:
+  repository: "harbor.devops.softnethq.co.tz/k8s_dashboard/metrics-dashboard"
+  tag: "1.0.2"
+
+# The real dashboard-auth Secret is created out-of-band (imperatively, so it
+# survives ArgoCD selfHeal) - Helm must not try to create/own its own copy,
+# or it'll fight the real one with blank DASHBOARD_USERS/OIDC_CLIENT_SECRET.
+secret:
+  create: false
+  existingSecretName: "dashboard-auth"
+
+branding:
+  clusterName: "prod-cluster"
+
+dataSource:
+  # Prod cluster's kube-prometheus-stack Helm release is named
+  # "prometheus-stack" instead of "monitoring" — different service names.
+  prometheusUrl: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc:9090"
+  alertmanagerUrl: "http://prometheus-stack-kube-prom-alertmanager.monitoring.svc:9093"
+
+links:
+  dashboardUrl: "https://metrics-dashboard.prod.softnethq.co.tz"
+  k8sDashboardUrl: "https://k8s-dashboard.prod.softnethq.co.tz"
+  argocdUrl: "https://argocd.devops.softnethq.co.tz"
+
+oidc:
+  issuerUrl: "https://keycloak.devops.softnethq.co.tz/realms/SoftNet%20AD"
+  redirectUrl: "https://metrics-dashboard.prod.softnethq.co.tz/login/oidc/callback"
+  adminGroup: "k8s-cluster-admins,k8s-platform-admins"
+  scopedViewerGroups: "vfd-group:vfd-"
+
+httpRoute:
+  hostnames:
+    - "metrics-dashboard.prod.softnethq.co.tz"
+
+alerting:
+  emailTo:
+    - "lsaid@softnet.co.tz"
+  smtp:
+    fromName: "InfraWatch"
+    from: "donotreply@softnet.co.tz"
+  routes:
+    clusterNodes:
+      - "dfaustine@softnet.co.tz"
+    vfd:
+      - "mmshana@softnet.co.tz"
+    gitlabDevops:
+      - "lsaid@softnet.co.tz"

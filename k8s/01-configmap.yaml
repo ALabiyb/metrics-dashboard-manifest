@@ -31,7 +31,7 @@ data:
   # server, or gitlab/devops go to a different responsible person instead
   # of one shared inbox. Each is optional - leave blank to skip that group
   # (ALERT_EMAIL_TO above still applies to everything either way).
-  ALERT_EMAIL_CLUSTER_NODES: "dfaustine@softnet.co.tz"
+  ALERT_EMAIL_CLUSTER_NODES: "dfaustine@softnet.co.tz,smlambo@softnet.co.tz"
   ALERT_EMAIL_VFD: "mmshana@softnet.co.tz"
   ALERT_EMAIL_GITLAB_DEVOPS: "lsaid@softnet.co.tz"
 
@@ -45,5 +45,15 @@ data:
   OIDC_ISSUER_URL: "https://keycloak.devops.softnethq.co.tz/realms/SoftNet%20AD"
   OIDC_CLIENT_ID: "metrics-dashboard"
   OIDC_REDIRECT_URL: "https://metrics-dashboard.dev.softnethq.co.tz/login/oidc/callback"
-  OIDC_ADMIN_GROUP: "k8s-cluster-admins"
+  # Comma-separated — platform-admins doesn't imply cluster-admins membership
+  # in Keycloak, so both are listed explicitly to get admin here.
+  OIDC_ADMIN_GROUP: "k8s-cluster-admins,k8s-platform-admins"
   OIDC_TLS_SKIP_VERIFY: "true"
+
+  # Scoped viewers: a Keycloak group whose members only see external servers
+  # whose name starts with the given prefix, nothing else in the dashboard.
+  # Format: "group:prefix,group:prefix,...". Add more teams here later
+  # without touching code — e.g. "vfd-group:vfd-,gitlab-team:gitlab-".
+  # Requires the vfd-group to actually exist in Keycloak with members added;
+  # harmless if the group is empty or doesn't exist yet.
+  OIDC_SCOPED_VIEWER_GROUPS: "vfd-group:vfd-"

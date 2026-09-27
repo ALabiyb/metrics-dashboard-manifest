@@ -1,0 +1,152 @@
+# ---------------------------------------------------------------------------
+# Author: Labiyb M. Said — DevSecOps Engineer
+# Contact: saidlabiybm@gmail.com
+# ---------------------------------------------------------------------------
+#
+# Generic, OSS-ready defaults. Nothing here targets any one company/cluster —
+# see values-dev.yaml / values-uat.yaml / values-prod.yaml in this same
+# directory for the real overrides used on the softnet.co.tz cluster.
+#
+# Namespace is deliberately NOT set anywhere in this chart's templates —
+# it's controlled by `helm install -n <ns>` or, under ArgoCD, by the
+# Application's spec.destination.namespace (with syncOptions
+# CreateNamespace=true), exactly like the raw k8s/*.yaml manifests this
+# chart replaces. That's what keeps dev/uat/prod as one values layering
+# instead of three near-duplicate namespaces baked into templates.
+
+# Resource base name. Every values-<env>.yaml below pins nameOverride to
+# "metrics-dashboard" so this is a drop-in replacement for the existing live
+# Deployment/ConfigMap/Service names, not a rename.
+nameOverride: ""
+fullnameOverride: ""
+# Selector/pod label used by every resource (Deployment, Service, HTTPRoute
+# backendRef). Matches the raw manifests' `app: dashboard` so a live env can
+# switch from kubectl-applied YAML to this chart without an orphaned
+# selector mismatch.
+podLabel: "dashboard"
+
+replicaCount: 2
+
+image:
+  repository: "harbor.example.com/CHANGE_ME_project/metrics-dashboard"
+  tag: "CHANGE_ME_tag"
+  pullPolicy: Always
+
+service:
+  name: "dashboard"
+  type: NodePort
+  port: 80
+  # TV kiosk mode (/tv) — optional second NodePort, matches the app's
+  # dedicated unauthenticated kiosk route. Set tv.enabled: false to drop it.
+  tv:
+    enabled: true
+    port: 32030
+    nodePort: 32030
+
+# Gateway API HTTPRoute — disable on clusters without Istio/Gateway API
+# (gateway.networking.k8s.io/v1) installed; Service still works standalone
+# via NodePort/port-forward either way.
+httpRoute:
+  enabled: true
+  name: "metrics-dashboard-route"
+  parentRef:
+    name: "main-gateway"
+    namespace: "istio-system"
+  hostnames:
+    - "metrics-dashboard.example.com"
+
+configMap:
+  # Defaults to "<fullname>-config" if left blank — set explicitly here so
+  # it matches the existing live ConfigMap name exactly.
+  name: "metrics-dashboard-config"
+
+app:
+  port: "8090"
+  # production hides the "Development" env badge on the login page/TV bar —
+  # this is intentional even for the dev cluster (see appEnv comment below).
+  env: "production"
+
+branding:
+  companyName: "InfraWatch"
+  clusterName: "cluster"
+
+dataSource:
+  prometheusUrl: "http://monitoring-kube-prometheus-prometheus.monitoring.svc:9090"
+  alertmanagerUrl: "http://monitoring-kube-prometheus-alertmanager.monitoring.svc:9093"
+
+# Public URL this dashboard is reachable at, and cross-links shown in its
+# nav to the sibling k8s-dashboard / ArgoCD UI. Leave k8sDashboardUrl /
+# argocdUrl blank to hide those links entirely.
+links:
+  dashboardUrl: ""
+  k8sDashboardUrl: ""
+  argocdUrl: ""
+
+# Keycloak SSO. Leave issuerUrl blank to disable OIDC entirely — the app
+# falls back to local DASHBOARD_USERS auth only (see secret.dashboardUsers
+# below) and always registers /login/oidc as a redirect-to-login-with-error
+# route either way.
+oidc:
+  issuerUrl: ""
+  clientId: "metrics-dashboard"
+  redirectUrl: ""
+  # Comma-separated to allow more than one admin group — useful since a
+  # higher-privilege group (e.g. a platform-admins tier) doesn't
+  # automatically imply membership in a lower one (e.g. cluster-admins).
+  adminGroup: "k8s-cluster-admins"
+  tlsSkipVerify: "true"
+  # Scoped viewers: Keycloak group -> external-server name prefix, so a team
+  # (e.g. "vfd-group") sees only servers named "vfd-*" and nothing else in
+  # the dashboard. Comma-separated "group:prefix" pairs; empty disables it.
+  # Add more teams here later without a code change or redeploy.
+  scopedViewerGroups: ""
+
+# NOC email alerting. Fully OFF by default: the Go binary's Enabled() gate
+# requires both an SMTP username AND password (secret.smtpUsername /
+# secret.smtpPassword below) — leave those blank and no email ever sends,
+# regardless of what's configured here. The Alertmanager webhook + in-memory
+# Alerts page work either way, independent of email.
+alerting:
+  # Always CC'd on top of whichever route below matches (and the sole
+  # recipient if nothing matches). Comma-joined into ALERT_EMAIL_TO.
+  emailTo: []
+  smtp:
+    host: "smtp.zoho.com"
+    port: "587"
+    fromName: ""   # defaults to "<companyName> Metrics" in-app if left blank
+    from: ""       # defaults to secret.smtpUsername in-app if left blank
+  # Per-node-group routing: alerts about a cluster node, a vfd-*-style
+  # external server, or gitlab/devops go to a dedicated list instead of only
+  # the shared emailTo inbox. Each list is independently optional — an empty
+  # list just skips that route. Rename/add groups by editing
+  # templates/configmap.yaml + the Go source's buildRoutes(), this values
+  # shape is specific to the three groups this app ships with today.
+  routes:
+    clusterNodes: []
+    vfd: []
+    gitlabDevops: []
+
+# Local username/password + session/embed auth, and the OIDC client secret.
+# NEVER commit real values here — this is why `secret.create` exists as an
+# escape hatch: set it false and point existingSecretName at a Secret
+# created out-of-band (sealed-secrets/external-secrets/Vault/imperative
+# kubectl create secret), which is how the live dev/uat/prod envs actually
+# do it today (see this chart's README).
+secret:
+  create: true
+  name: "dashboard-auth"
+  existingSecretName: ""
+  dashboardUsers: ""
+  sessionSecret: ""
+  embedToken: ""
+  oidcClientSecret: ""
+  smtpUsername: ""
+  smtpPassword: ""
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi

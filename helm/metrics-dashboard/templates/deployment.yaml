@@ -1,19 +1,22 @@
+# ---------------------------------------------------------------------------
+# Author: Labiyb M. Said — DevSecOps Engineer
+# Contact: saidlabiybm@gmail.com
+# ---------------------------------------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: metrics-dashboard
-  namespace: metrics-dashboard-dev
+  name: {{ include "metrics-dashboard.fullname" . }}
   labels:
-    app: dashboard
+    {{- include "metrics-dashboard.labels" . | nindent 4 }}
 spec:
-  replicas: 2
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: dashboard
+      {{- include "metrics-dashboard.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: dashboard
+        {{- include "metrics-dashboard.selectorLabels" . | nindent 8 }}
     spec:
       securityContext:
         runAsNonRoot: true
@@ -23,8 +26,8 @@ spec:
           type: RuntimeDefault
       containers:
         - name: dashboard
-          image: harbor.devops.softnethq.co.tz/k8s_dashboard/metrics-dashboard:48
-          imagePullPolicy: Always
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 8090
@@ -33,116 +36,116 @@ spec:
             - name: PORT
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: PORT
 
             # ---- Auth (Secret) ----------------------------------------------
             - name: DASHBOARD_USERS
               valueFrom:
                 secretKeyRef:
-                  name: dashboard-auth
+                  name: {{ include "metrics-dashboard.secretName" . }}
                   key: DASHBOARD_USERS
             - name: SESSION_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: dashboard-auth
+                  name: {{ include "metrics-dashboard.secretName" . }}
                   key: SESSION_SECRET
             - name: EMBED_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: dashboard-auth
+                  name: {{ include "metrics-dashboard.secretName" . }}
                   key: EMBED_TOKEN
 
             # ---- Data source ------------------------------------------------
             - name: PROMETHEUS_URL
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: PROMETHEUS_URL
 
             # ---- Branding / identity ----------------------------------------
             - name: APP_COMPANY_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: APP_COMPANY_NAME
             - name: APP_CLUSTER_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: APP_CLUSTER_NAME
             - name: APP_ENV
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: APP_ENV
 
             # ---- Alertmanager -----------------------------------------------
             - name: ALERTMANAGER_URL
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: ALERTMANAGER_URL
 
             # ---- Alerting (NOC email) ----------------------------------------
             - name: ALERT_EMAIL_TO
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: ALERT_EMAIL_TO
             - name: SMTP_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: SMTP_HOST
             - name: SMTP_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: SMTP_PORT
             - name: SMTP_FROM_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: SMTP_FROM_NAME
             - name: SMTP_FROM
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: SMTP_FROM
             - name: ALERT_EMAIL_CLUSTER_NODES
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: ALERT_EMAIL_CLUSTER_NODES
                   optional: true
             - name: ALERT_EMAIL_VFD
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: ALERT_EMAIL_VFD
                   optional: true
             - name: ALERT_EMAIL_GITLAB_DEVOPS
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: ALERT_EMAIL_GITLAB_DEVOPS
                   optional: true
             - name: DASHBOARD_URL
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: DASHBOARD_URL
             - name: SMTP_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: dashboard-auth
+                  name: {{ include "metrics-dashboard.secretName" . }}
                   key: SMTP_USERNAME
                   optional: true
             - name: SMTP_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: dashboard-auth
+                  name: {{ include "metrics-dashboard.secretName" . }}
                   key: SMTP_PASSWORD
                   optional: true
 
@@ -150,49 +153,49 @@ spec:
             - name: K8S_DASHBOARD_URL
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: K8S_DASHBOARD_URL
             - name: ARGOCD_URL
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: ARGOCD_URL
 
             # ---- Keycloak SSO -----------------------------------------------
             - name: OIDC_ISSUER_URL
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: OIDC_ISSUER_URL
             - name: OIDC_CLIENT_ID
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: OIDC_CLIENT_ID
             - name: OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: dashboard-auth
+                  name: {{ include "metrics-dashboard.secretName" . }}
                   key: OIDC_CLIENT_SECRET
             - name: OIDC_REDIRECT_URL
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: OIDC_REDIRECT_URL
             - name: OIDC_ADMIN_GROUP
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: OIDC_ADMIN_GROUP
             - name: OIDC_TLS_SKIP_VERIFY
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: OIDC_TLS_SKIP_VERIFY
             - name: OIDC_SCOPED_VIEWER_GROUPS
               valueFrom:
                 configMapKeyRef:
-                  name: metrics-dashboard-config
+                  name: {{ include "metrics-dashboard.configMapName" . }}
                   key: OIDC_SCOPED_VIEWER_GROUPS
                   optional: true
 
@@ -215,9 +218,4 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 20
           resources:
-            requests:
-              cpu: 50m
-              memory: 64Mi
-            limits:
-              cpu: 250m
-              memory: 128Mi
+            {{- toYaml .Values.resources | nindent 12 }}
