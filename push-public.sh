@@ -21,7 +21,14 @@ FILES=(
   argocd/metrics-dashboard-dev.yaml
   argocd/metrics-dashboard-uat.yaml
   argocd/metrics-dashboard-prod.yaml
+  argocd/metrics-dashboard-dev.yaml.helm-example
   README.md
+  helm/metrics-dashboard/README.md
+  helm/metrics-dashboard/values.yaml
+  helm/metrics-dashboard/values-dev.yaml
+  helm/metrics-dashboard/values-uat.yaml
+  helm/metrics-dashboard/values-prod.yaml
+  helm/metrics-dashboard/templates/secret.yaml
 )
 
 # Only process files that actually exist on this branch
@@ -39,7 +46,19 @@ perl -pi -e '
   s|http://192\.168\.15\.\d+/kubernetes-manifest/metrics-dashboard\.git|https://github.com/ALabiyb/metrics-dashboard-manifest.git|g;
   s/192\.168\.200\.\d+/<k8s-api-server>/g;
   s/192\.168\.15\.\d+/<internal-ip>/g;
+  # Named real inboxes -> role-based placeholders (must run BEFORE the bare
+  # softnet.co.tz domain rule below, or the domain swap would leave a real
+  # persons username exposed as e.g. dfaustine@nexbridge.co.tz).
+  s/dfaustine\@softnet\.co\.tz/oncall-infra\@nexbridge.co.tz/g;
+  s/smlambo\@softnet\.co\.tz/oncall-infra\@nexbridge.co.tz/g;
+  s/mmshana\@softnet\.co\.tz/oncall-vfd\@nexbridge.co.tz/g;
   s/lsaid\@softnet\.co\.tz/admin\@nexbridge.co.tz/g;
+  # Safety net: any OTHER real @softnet.co.tz address not explicitly listed
+  # above still gets caught here rather than leaking a real name verbatim.
+  s/[\w.+-]+\@softnet\.co\.tz/oncall-unmapped\@nexbridge.co.tz/g;
+  # Bare domain in comments/non-email text (must run AFTER the email rules
+  # above, or it would rewrite the domain before they get a chance to match).
+  s/softnet\.co\.tz/nexbridge.co.tz/g;
   s/lsaid/CHANGE_ME_credentials_id/g;
 ' "${EXISTING[@]}"
 
