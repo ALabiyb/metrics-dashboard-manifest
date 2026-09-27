@@ -56,6 +56,10 @@ perl -pi -e '
   # Safety net: any OTHER real @softnet.co.tz address not explicitly listed
   # above still gets caught here rather than leaking a real name verbatim.
   s/[\w.+-]+\@softnet\.co\.tz/oncall-unmapped\@nexbridge.co.tz/g;
+  # Two+ real addresses mapping to the same placeholder (e.g. dfaustine and
+  # smlambo both -> oncall-infra) leaves a literal "x,x" in the comma list -
+  # collapse consecutive duplicates down to one.
+  s/(oncall-[\w-]+\@nexbridge\.co\.tz)(,\1)+/$1/g;
   # Bare domain in comments/non-email text (must run AFTER the email rules
   # above, or it would rewrite the domain before they get a chance to match).
   s/softnet\.co\.tz/nexbridge.co.tz/g;
