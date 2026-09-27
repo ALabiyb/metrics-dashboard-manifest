@@ -1,0 +1,95 @@
+# ---------------------------------------------------------------------------
+# Author: Labiyb M. Said — DevSecOps Engineer
+# Contact: saidlabiybm@gmail.com
+# ---------------------------------------------------------------------------
+#
+# Per-node process-level metrics (feeds "Top Processes" in InfraWatch).
+# Was previously applied ad-hoc via kubectl and had no source file — this
+# checks in the live config plus the memory/cpu fix below.
+#
+# 64Mi/100m was too tight on dev-api-1 / dev-frontend-1 (heavier process
+# counts): dev-api-1's process-exporter was repeatedly OOM-killed by its own
+# cgroup limit (anon-rss ~56Mi right at the 64Mi ceiling, confirmed via
+# dmesg), and dev-frontend-1's stayed under the ceiling but scraped so slowly
+# under memory pressure that Prometheus scrapes timed out (0 restarts, but
+# still reported "down"). Raised to 256Mi/300m for headroom on every node.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: process-exporter-config
+  namespace: monitoring
+data:
+  config.yml: |
+    process_names:
+      - name: "{{.Comm}}"
+        cmdline:
+          - '.+'
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: process-exporter
+  namespace: monitoring
+  labels:
+    app: process-exporter
+spec:
+  selector:
+    matchLabels:
+      app: process-exporter
+  template:
+    metadata:
+      labels:
+        app: process-exporter
+    spec:
+      # hostPID is required, not incidental: process-exporter groups processes
+      # by name across the WHOLE host (including inside other pods'
+      # containers), which only resolves correctly against the host PID
+      # namespace — in the container's own PID namespace it would only ever
+      # see itself.
+      hostPID: true
+      # This DaemonSet never talks to the Kubernetes API (it only reads
+      # /host/proc and serves /metrics), so it doesn't need a service account
+      # token at all.
+      automountServiceAccountToken: false
+      tolerations:
+        - operator: Exists
+      containers:
+        - name: process-exporter
+          image: ncabatoff/process-exporter:0.8.5
+          args:
+            - --config.path=/etc/process-exporter/config.yml
+            - --procfs=/host/proc
+          ports:
+            - name: metrics
+              containerPort: 9256
+              hostPort: 9256
+          securityContext:
+            # Privileged (not just a capability like SYS_PTRACE) is needed
+            # because this reads /proc for processes owned by every other
+            # container on the node, each in its own user/mount namespace —
+            # plain SYS_PTRACE isn't sufficient to cross those boundaries.
+            # Confirmed against the currently-running exporter, which relies
+            # on this same setting.
+            privileged: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+              ephemeral-storage: 32Mi
+            limits:
+              cpu: 300m
+              memory: 256Mi
+              ephemeral-storage: 128Mi
+          volumeMounts:
+            - name: proc
+              mountPath: /host/proc
+              readOnly: true
+            - name: config
+              mountPath: /etc/process-exporter
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: config
+          configMap:
+            name: process-exporter-config
