@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin http://192.168.15.85/kubernetes-manifest/metrics-dashboard.git
+git remote add origin https://github.com/ALabiyb/metrics-dashboard-manifest.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](http://192.168.15.85/kubernetes-manifest/metrics-dashboard/-/settings/integrations)
+- [ ] [Set up project integrations](http://<internal-ip>/kubernetes-manifest/metrics-dashboard/-/settings/integrations)
 
 ## Collaborate with your team
 

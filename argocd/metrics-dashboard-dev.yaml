@@ -4,14 +4,14 @@ metadata:
   name: metrics-dashboard-dev
   namespace: argocd
   annotations:
-    notifications.argoproj.io/subscribe.on-sync-succeeded.email: lsaid@softnet.co.tz
-    notifications.argoproj.io/subscribe.on-sync-failed.email: lsaid@softnet.co.tz
-    notifications.argoproj.io/subscribe.on-health-status-change.email: lsaid@softnet.co.tz
-    notifications.argoproj.io/subscribe.on-pod-crash-loop.email: lsaid@softnet.co.tz
+    notifications.argoproj.io/subscribe.on-sync-succeeded.email: admin@nexbridge.co.tz
+    notifications.argoproj.io/subscribe.on-sync-failed.email: admin@nexbridge.co.tz
+    notifications.argoproj.io/subscribe.on-health-status-change.email: admin@nexbridge.co.tz
+    notifications.argoproj.io/subscribe.on-pod-crash-loop.email: admin@nexbridge.co.tz
 spec:
   project: default
   source:
-    repoURL: http://192.168.15.85/kubernetes-manifest/metrics-dashboard.git
+    repoURL: https://github.com/ALabiyb/metrics-dashboard-manifest.git
     targetRevision: dev           # dev branch = development builds (image tag = build number)
     path: k8s
   destination:

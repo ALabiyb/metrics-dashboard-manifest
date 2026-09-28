@@ -8,7 +8,7 @@
 # same cluster as dev/prod, isolated by namespace).
 
 image:
-  repository: "harbor.devops.softnethq.co.tz/k8s_dashboard/metrics-dashboard"
+  repository: "harbor.devops.nexbridge.co.tz/k8s_dashboard/metrics-dashboard"
   # The live uat branch's k8s/02-deployment.yaml still carries the
   # CHANGE_ME_tag placeholder as of this chart's creation — uat's build
   # pipeline hasn't pinned a real tag yet. Fill this in with the actual
@@ -30,30 +30,30 @@ dataSource:
   alertmanagerUrl: "http://monitoring-kube-prometheus-alertmanager.monitoring.svc:9093"
 
 links:
-  dashboardUrl: "https://metrics-dashboard.uat.softnethq.co.tz"
-  k8sDashboardUrl: "https://k8s-dashboard.uat.softnethq.co.tz"
-  argocdUrl: "https://argocd.devops.softnethq.co.tz"
+  dashboardUrl: "https://metrics-dashboard.uat.nexbridge.co.tz"
+  k8sDashboardUrl: "https://k8s-dashboard.uat.nexbridge.co.tz"
+  argocdUrl: "https://argocd.devops.nexbridge.co.tz"
 
 oidc:
-  issuerUrl: "https://keycloak.devops.softnethq.co.tz/realms/SoftNet%20AD"
-  redirectUrl: "https://metrics-dashboard.uat.softnethq.co.tz/login/oidc/callback"
+  issuerUrl: "https://keycloak.devops.nexbridge.co.tz/realms/NexBridge%20AD"
+  redirectUrl: "https://metrics-dashboard.uat.nexbridge.co.tz/login/oidc/callback"
   adminGroup: "k8s-cluster-admins,k8s-platform-admins"
   scopedViewerGroups: "vfd-group:vfd-"
 
 httpRoute:
   hostnames:
-    - "metrics-dashboard.uat.softnethq.co.tz"
+    - "metrics-dashboard.uat.nexbridge.co.tz"
 
 alerting:
   emailTo:
-    - "lsaid@softnet.co.tz"
+    - "admin@nexbridge.co.tz"
   smtp:
     fromName: "InfraWatch"
-    from: "donotreply@softnet.co.tz"
+    from: "oncall-unmapped@nexbridge.co.tz"
   routes:
     clusterNodes:
-      - "dfaustine@softnet.co.tz"
+      - "oncall-infra@nexbridge.co.tz"
     vfd:
-      - "mmshana@softnet.co.tz"
+      - "oncall-vfd@nexbridge.co.tz"
     gitlabDevops:
-      - "lsaid@softnet.co.tz"
+      - "admin@nexbridge.co.tz"

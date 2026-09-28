@@ -5,7 +5,7 @@
 #
 # Generic, OSS-ready defaults. Nothing here targets any one company/cluster —
 # see values-dev.yaml / values-uat.yaml / values-prod.yaml in this same
-# directory for the real overrides used on the softnet.co.tz cluster.
+# directory for the real overrides used on the nexbridge.co.tz cluster.
 #
 # Namespace is deliberately NOT set anywhere in this chart's templates —
 # it's controlled by `helm install -n <ns>` or, under ArgoCD, by the

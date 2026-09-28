@@ -21,30 +21,30 @@ data:
   # SMTP_PASSWORD live in the dashboard-auth Secret instead, generated
   # imperatively (not tracked by GitOps here), so it survives ArgoCD
   # selfHeal.
-  ALERT_EMAIL_TO: "lsaid@softnet.co.tz"
+  ALERT_EMAIL_TO: "admin@nexbridge.co.tz"
   SMTP_HOST: "smtp.zoho.com"
   SMTP_PORT: "587"
   SMTP_FROM_NAME: "InfraWatch"
-  SMTP_FROM: "donotreply@softnet.co.tz"
+  SMTP_FROM: "oncall-unmapped@nexbridge.co.tz"
 
   # Per-node-group routing: alerts about a cluster node, a vfd-* external
   # server, or gitlab/devops go to a different responsible person instead
   # of one shared inbox. Each is optional - leave blank to skip that group
   # (ALERT_EMAIL_TO above still applies to everything either way).
-  ALERT_EMAIL_CLUSTER_NODES: "dfaustine@softnet.co.tz,smlambo@softnet.co.tz"
-  ALERT_EMAIL_VFD: "mmshana@softnet.co.tz"
-  ALERT_EMAIL_GITLAB_DEVOPS: "lsaid@softnet.co.tz"
+  ALERT_EMAIL_CLUSTER_NODES: "oncall-infra@nexbridge.co.tz"
+  ALERT_EMAIL_VFD: "oncall-vfd@nexbridge.co.tz"
+  ALERT_EMAIL_GITLAB_DEVOPS: "admin@nexbridge.co.tz"
 
-  DASHBOARD_URL: "https://metrics-dashboard.dev.softnethq.co.tz"
+  DASHBOARD_URL: "https://metrics-dashboard.dev.nexbridge.co.tz"
 
   # ---- Cross-links -----------------------------------------------------------
-  K8S_DASHBOARD_URL: "https://k8s-dashboard.dev.softnethq.co.tz"
-  ARGOCD_URL: "https://argocd.devops.softnethq.co.tz"
+  K8S_DASHBOARD_URL: "https://k8s-dashboard.dev.nexbridge.co.tz"
+  ARGOCD_URL: "https://argocd.devops.nexbridge.co.tz"
 
   # ---- Keycloak SSO ----------------------------------------------------------
-  OIDC_ISSUER_URL: "https://keycloak.devops.softnethq.co.tz/realms/SoftNet%20AD"
+  OIDC_ISSUER_URL: "https://keycloak.devops.nexbridge.co.tz/realms/NexBridge%20AD"
   OIDC_CLIENT_ID: "metrics-dashboard"
-  OIDC_REDIRECT_URL: "https://metrics-dashboard.dev.softnethq.co.tz/login/oidc/callback"
+  OIDC_REDIRECT_URL: "https://metrics-dashboard.dev.nexbridge.co.tz/login/oidc/callback"
   # Comma-separated — platform-admins doesn't imply cluster-admins membership
   # in Keycloak, so both are listed explicitly to get admin here.
   OIDC_ADMIN_GROUP: "k8s-cluster-admins,k8s-platform-admins"

@@ -91,10 +91,10 @@ in practice:
 - Admin access: Keycloak groups `k8s-cluster-admins` and
   `k8s-platform-admins` (comma-separated — see `oidc.adminGroup` below)
 - Scoped viewer: Keycloak group `vfd-group` → sees only `vfd-*` servers
-- NOC alerting is on: `lsaid@softnet.co.tz` is CC'd on every alert; cluster
-  node alerts additionally go to `dfaustine@softnet.co.tz` and
-  `smlambo@softnet.co.tz`; vfd-server alerts additionally go to
-  `mmshana@softnet.co.tz`
+- NOC alerting is on: `admin@nexbridge.co.tz` is CC'd on every alert; cluster
+  node alerts additionally go to `oncall-infra@nexbridge.co.tz` and
+  `oncall-infra@nexbridge.co.tz`; vfd-server alerts additionally go to
+  `oncall-vfd@nexbridge.co.tz`
 
 ---
 
@@ -218,7 +218,7 @@ manifests. To cut an environment over, change that Application's `source` to:
 
 ```yaml
 source:
-  repoURL: http://192.168.15.85/kubernetes-manifest/metrics-dashboard.git
+  repoURL: https://github.com/ALabiyb/metrics-dashboard-manifest.git
   targetRevision: dev            # or uat / prod
   path: helm/metrics-dashboard
   helm:
